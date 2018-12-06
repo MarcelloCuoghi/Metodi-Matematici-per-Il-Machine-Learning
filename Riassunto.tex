@@ -360,13 +360,63 @@ Si osserva che $\alpha^{BB2} \leqslant \alpha^{BB1}$. Spesso si utilizzano tecni
 \chapter{Support Vector Machine}
 
 \section{Introduzione}
-
-
+Il Support Vector Machine è un algoritmo di machine learning tra i più utilizzati. Deve il suo successo ai molti studi che ne hanno dimostrato l'utilità e l'efficacia in diversi contesti. L'idea base con cui è nato è quello di separare linearmente tramite un iperpiano di separazione due classi diversi, quindi un problema di classificazione binaria. In particolare cerca l'iperpiano $w^Tx+b, w \in R^n\ e\ b \in R$ tale che $y_i(w^T x_i+b) \geqslant 1, i = 1,...,N$. La classificazione di un nuovo punto avviene valutandone il segno rispetto l'iperpiano trovato:
+\begin{equation} 
+	F(x) = sign (w^T x+b) =	
+	\begin{cases}
+		1, & \mbox{se } w^Tx_i+b > 0 \\ 
+		-1, & \mbox{se } w^Tx_i+b < 0 
+	\end{cases}
+\end{equation}
+In fase di learning voglio avere quindi:
+\begin{equation} 
+	\begin{cases}
+		 w^Tx_i+b > 0, & \mbox{se } y_i = 1 \\ 
+		w^Tx_i+b < 0, & \mbox{se } y_i = -1
+	\end{cases}
+\end{equation}
+scalando $w$ e $b$ ottengo:
+\begin{equation} 
+	\begin{cases}
+		 w^Tx_i+b \geqslant 1, & \mbox{se } y_i = 1 \\ 
+		w^Tx_i+b \leqslant 1, & \mbox{se } y_i = -1
+	\end{cases}
+	=
+	\begin{cases}
+		 y_i (w^Tx_i+b) \geqslant 1, & \mbox{se } y_i = 1 \\ 
+		y_i (w^Tx_i+b) \geqslant 1, & \mbox{se } y_i = -1
+	\end{cases}
+\end{equation}
+da cui ricavo $y_i (w^Tx_i+b) \geqslant 1 \forall i = 1,...,N$.
 
 \section{Problema Primale}
+Passiamo ora a definire formalmente il problema di learning per poi poter successivamente andarlo a risolvere, in un primo momento nel caso di classi linearmente separabili.\\
 
+Si definisce notazione canonica dell'iperpiano di separazione quella per cui la coppia $(w, b)$ è tale che $y_i (w^Tx_i+b) = 1$ per i punti più vicini all'iperpiano.\\
+L'iperpiano di separazione ottimale è quello che massimizza la distanza con i punto più vicini delle due classi. Ci sono infatti diversi studi e dimostrazioni che verificano che tra gli infiniti piani di separazione possibili tra due classi quello con le proprietà di generalizzazione migliore è quello che ne massimizza il margine. Ciò è verificabile anche a livello intuitivo geometricamente. \\Si procede quindi a calcolare la distanza con segno dell'iperpiano da un punto $x_i$ come $d_i =\frac{w^T x_i + b}{\|w\|}$, da cui, moltiplicando ambo i membri per $y_i$ si ottiene $d_i y_i = \|w\|^{-1}$, infatti per definizione canonica di iperpiano di separazione abbiamo $w^T x_i + b= 1$. Si vuole massimizzare questa distanza, si ottiene quindi il seguente problema di minimizzazione vincolata:
+\begin{equation} 
+	\begin{aligned}
+	& \min_{w, b} 
+	& & \frac{1}{2}w^T w\\
+	& s.t. 
+	& & y_i (w^Tx_i+b) \geqslant 1 , i= 1,...,N
+	\end{aligned}
+\end{equation}
+questo nel caso di classi linearmente separabili.\\
 
-
+Nel caso che i due insiemi non siano linearmente separabili, si aggiunge una variabile ausiliaria, detta variabile slack, che bilancia l'errore di classificazione di un punto. Si aggiunge tale variabile nella funzione obbiettivo volendo ridurre l'errore in fase di training. Il problema primale diventa perciò:
+\begin{equation} \label{primale}
+	\begin{aligned}
+	& \min_{w, b, \xi} 
+	& & \frac{1}{2}w^T w + c \sum_{i = 1}^{N}{\xi_i}\\
+	& s.t. 
+	& & y_i (w^Tx_i+b) \geqslant 1 - \xi_i 
+	& & & i= 1,...,N\\
+	&
+	& & \xi_i \geqslant 0
+	& & & i= 1,...,N
+	\end{aligned}
+\end{equation}
 \section{Ottimizzazione Vincolata}
 
 
