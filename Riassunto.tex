@@ -328,29 +328,29 @@ eseguendo le seguenti sostituzioni $s^k =(x^{k+1} - x^{k})$ e $y^k=\nabla f(x^{k
 Procedo cercando i valori di di $\alpha$ che minimizzano la distanza tra i due termini dell'equazione $\frac{1}{\alpha}  s^k = y^k$:
 \begin{equation} 
 \label{BB4}
-\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
+\arg\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
 \end{equation}
 e per simmetria:
 \begin{equation} 
 \label{BB5}
-\min_{\alpha} \| s^k -\alpha y^k\|^2 
+\arg\min_{\alpha} \| s^k -\alpha y^k\|^2 
 \end{equation}
 Dall'equazione (\ref{BB4}), ricavo gli $\alpha$ minimi:
 
 \begin{equation} 
 \label{BB6}
 	\begin{split}
-	\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
-	 &= \min_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
-	 &= \min_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
+	\arg\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
+	 &= \arg\min_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
+	 &= \arg\min_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
 	 & posto\  \frac{1}{\alpha} = \gamma \ ,({y^k}^T y^k)\ non\ dipende\ da\ \alpha,\ lo\ elimino\\
-	 &=  \min_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
-	 &trovo\ il\ minimo\ ponendo\ la\ derivata\ a\ zero\\
+	 &=  \arg\max_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
+	 &trovo\ il\ massimo\ ponendo\ la\ derivata\ a\ zero\\
 	 &\Rightarrow \gamma {s^k}^T s^k -{s^k}^T y^k = 0\\
 	 & \gamma = \frac{{s^k}^T y^k}{{s^k}^T s^k}, \ da\ cui\\
 	 & \alpha^{BB1} = \frac{{s^k}^T s^k}{{s^k}^T y^k}\\
 	 & e\ in\ modo\ analogo: \\
-	 & \min_{\alpha} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
+	 & \arg\min_{\alpha} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
 	 & \alpha^{BB2} = \frac{{s^k}^T y^k}{{y^k}^T y^k}
 	\end{split}
 \end{equation}
