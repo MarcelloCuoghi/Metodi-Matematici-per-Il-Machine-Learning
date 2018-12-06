@@ -209,52 +209,6 @@ La condizione di crescita deve soddisfare la regola di Armijo:
 \end{figure}
 $I( \alpha )$ è una retta con pendenza negativa, il suo grafico per piccoli valori di $\alpha$ sta sopra a $F( \alpha )$, quindi la condizione per piccoli valori di $\alpha$ è sicuramente soddisfatta.
 
-\subsection{Barzilai-Borwein}
-\`E uno dei metodi più utilizzati per accelerare notevolmente la velocità di convergenza senza dispendio in termini di risorse di calcolo. Si cercano di inglobare informazioni del secondo ordine, quindi relative all'Hessiana, nella scelta della lunghezza del passo $\alpha_k$. In pratica si cercano valori di $\alpha_k$ tali che $\alpha_k \nabla f(x^k) \approx (\nabla^2 f(x^k))^{-1}  \nabla f(x^k)$. Supposto di voler minimizzare una funzione quadratica del tipo $\frac{1}{2} x^T A x$, dove quindi l'Hessiana è $A$, la precedente relazione ci porta ad ottenere:
-\begin{equation}
-    \label{BB1}
-        \frac{1}{\alpha_k} I \approx A	
-\end{equation}
-per le proprietà di $A$ si ha che:
-\begin{equation}
-    \label{BB2}
-        A (x^{k+1} - x^{k}) = \nabla f(x^{k+1}) -\nabla f( x^{k} )
-\end{equation}
-eseguendo le seguenti sostituzioni $s^k =(x^{k+1} - x^{k})$ e $y^k=\nabla f(x^{k+1}) -\nabla f( x^{k} )$ che sono la differenza, rispettivamente, di due iterate successive e di due gradienti successivi, posso riscrivere la (\ref{BB2}) come:
-\begin{equation}
-    \label{BB3}
-        A s^k = y^k
-\end{equation}
-Procedo risolvendo un problema ai minimi quadrati, cioè cerco i valori di $\alpha$ che minimizzano la distanza tra i due termini dell'equazione $\frac{1}{\alpha}  s^k = y^k$:
-\begin{equation} 
-\label{BB4}
-\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
-\end{equation}
-\begin{equation} 
-\label{BB5}
-\min_{\alpha} \| s^k -\alpha y^k\|^2 
-\end{equation}
-Dall'equazione (\ref{BB4}) ricavo $\alpha$ minimo:
-
-\begin{equation} 
-\label{BB6}
-	\begin{split}
-	\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
-	 &= \min_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
-	 &= \min_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
-	 & posto\  \frac{1}{\alpha} = \gamma \ ,({y^k}^T y^k)\ non\ dipende\ da\ \alpha,\ lo\ elimino\\
-	 &=  \min_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
-	 &trovo\ il\ minimo\ ponendo\ la\ derivata\ a\ zero\\
-	 &\Rightarrow \gamma {s^k}^T s^k -{s^k}^T y^k = 0\\
-	 & \gamma = \frac{{s^k}^T y^k}{{s^k}^T s^k}, \ da\ cui\\
-	 & \alpha^{BB1} = \frac{{s^k}^T s^k}{{s^k}^T y^k}\\
-	 & e\ in\ modo\ analogo\ trovo \\
-	 & \alpha^{BB2} = \frac{{s^k}^T y^k}{{y^k}^T y^k}
-	\end{split}
-\end{equation}
-Queste regole, prescindendo dalla conoscenza di A, possono essere inglobate a costo zero in un algoritmo per problemi non lineari (con line search inesatta) anche con vincoli semplici per cui l'Hessiana è difficilmente calcolabile.\\
-Si osserva che $\alpha^{BB2} \leqslant \alpha^{BB1}$. Spesso si utilizzano tecniche di alternanza, per cui si eseguono alcune iterazioni con il primo parametro, altre iterazioni con il secondo parametro e così via.
-
 \section{Risultati di Convergenza}
 Andiamo ora a ragionare sui risultati ottenuti attraverso l'utilizzo dei metodi del gradiente nel nostro caso. Infatti, la successione generata dai metodo del gradiente può non avere punti di accumulazione: se la funzione $f$ non ha minimi locali, la successione $\{x^k\}$ può non essere limitata. Se però sappiamo che l'insieme di livello $\mathcal{L}_{\leqslant f(x^0)}(f) = \{x: f(x) \leqslant f(x^0)\}$ è limitato, e la scelta della lunghezza del passo forza la decrescita della funzione, allora la successione $\{x^k\}$ è limitata e dunque ha almeno un punto di accumulazione, ma non sappiamo ancora se corrisponde ad un minimo e se è unico.\\
 
@@ -338,7 +292,9 @@ per $t = 2$ si parla di velocità di convergenza quadratica. La convergenza supe
 \begin{equation}
 	\lim_{k \rightarrow \infty} \sup \frac{e(x^{k+1})}{e(x^k)^t} < \infty
 \end{equation}
+In termini pratici l'ordine di convergenza esprime il numero di cifre decimali che il metodo guadagna, ad ogni iterazione, rispetto alla soluzione esatta: tanto più grande è l'ordine, tanto maggiore è la velocità con cui la successione $\{x_k\}_k$  converge alla soluzione esatta.
 \\
+
 Un altro risultato interessante è dato dal seguente teorema.\\
 Sia $f(x) = \frac{1}{2} x^T A x$, $A$ simmetrica definita positiva. Sia $\{x^k\}$ generata dal metodo Steepest Descent, dove quindi $x^{k+1} = x^k - \alpha_k \nabla f(x^k)$, $\alpha_k$ è scelta con la regola di minimizzazione esatta.\\
 Allora per ogni $k$ si ha:
@@ -352,6 +308,54 @@ Stesso risultato più generale si ha con $f : R^n \rightarrow R$, $f \in \mathca
 	f(x^{k+1}) - f(x^*) \leqslant \left(\frac{k\left(\nabla^2  f(x^*)\right) - 1}{k\left(\nabla^2  f(x^*)\right) + 1}\right)^2 \left(f(x^k) - f(x^*)\right)
 \end{equation}
 dove $k(A) = \frac{M}{m} \Rightarrow \left(\frac{M- m}{M+m}\right)^2 = \left(\frac{\frac{M}{m}- 1 }{\frac{M}{m} + 1 }\right)^2 = \left(\frac{k(A)- 1}{k(A)+1}\right)^2 $
+
+\subsection{Barzilai-Borwein}
+\`E uno dei metodi più utilizzati per accelerare notevolmente la velocità di convergenza senza dispendio in termini di risorse di calcolo. Si cercano di inglobare informazioni del secondo ordine, quindi relative all'Hessiana, nella scelta della lunghezza del passo $\alpha_k$. In pratica si cercano valori di $\alpha_k$ tali che $\alpha_k \nabla f(x^k) \approx (\nabla^2 f(x^k))^{-1}  \nabla f(x^k)$. Supposto di voler minimizzare una funzione quadratica del tipo $\frac{1}{2} x^T A x$, dove quindi l'Hessiana è $A$, la precedente relazione ci porta ad ottenere:
+\begin{equation}
+    \label{BB1}
+        \frac{1}{\alpha_k} I \approx A	
+\end{equation}
+per le proprietà di $A$ si ha che:
+\begin{equation}
+    \label{BB2}
+        A (x^{k+1} - x^{k}) = \nabla f(x^{k+1}) -\nabla f( x^{k} )
+\end{equation}
+eseguendo le seguenti sostituzioni $s^k =(x^{k+1} - x^{k})$ e $y^k=\nabla f(x^{k+1}) -\nabla f( x^{k} )$ che sono la differenza, rispettivamente, di due iterate successive e di due gradienti successivi, posso riscrivere la (\ref{BB2}) come:
+\begin{equation}
+    \label{BB3}
+        A s^k = y^k
+\end{equation}
+Procedo cercando i valori di di $\alpha$ che minimizzano la distanza tra i due termini dell'equazione $\frac{1}{\alpha}  s^k = y^k$:
+\begin{equation} 
+\label{BB4}
+\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
+\end{equation}
+e per simmetria:
+\begin{equation} 
+\label{BB5}
+\min_{\alpha} \| s^k -\alpha y^k\|^2 
+\end{equation}
+Dall'equazione (\ref{BB4}), ricavo gli $\alpha$ minimi:
+
+\begin{equation} 
+\label{BB6}
+	\begin{split}
+	\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
+	 &= \min_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
+	 &= \min_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
+	 & posto\  \frac{1}{\alpha} = \gamma \ ,({y^k}^T y^k)\ non\ dipende\ da\ \alpha,\ lo\ elimino\\
+	 &=  \min_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
+	 &trovo\ il\ minimo\ ponendo\ la\ derivata\ a\ zero\\
+	 &\Rightarrow \gamma {s^k}^T s^k -{s^k}^T y^k = 0\\
+	 & \gamma = \frac{{s^k}^T y^k}{{s^k}^T s^k}, \ da\ cui\\
+	 & \alpha^{BB1} = \frac{{s^k}^T s^k}{{s^k}^T y^k}\\
+	 & e\ in\ modo\ analogo: \\
+	 & \min_{\alpha} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
+	 & \alpha^{BB2} = \frac{{s^k}^T y^k}{{y^k}^T y^k}
+	\end{split}
+\end{equation}
+Queste regole, prescindendo dalla conoscenza di A, possono essere inglobate a costo zero in un algoritmo per problemi non lineari (con line search inesatta) anche con vincoli semplici per cui l'Hessiana è difficilmente calcolabile.\\
+Si osserva che $\alpha^{BB2} \leqslant \alpha^{BB1}$. Spesso si utilizzano tecniche di alternanza, per cui si eseguono alcune iterazioni con il primo parametro, altre iterazioni con il secondo parametro e così via.
 
 \chapter{Support Vector Machine}
 
