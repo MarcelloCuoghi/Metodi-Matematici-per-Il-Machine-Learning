@@ -417,6 +417,23 @@ Nel caso che i due insiemi non siano linearmente separabili, si aggiunge una var
 	& & & i= 1,...,N
 	\end{aligned}
 \end{equation}
+Il problema è convesso poiché ho che l'Hessiana del mio problema è il seguente:\\
+\[
+ \begin{matrix}
+  1 & 0 & ... & 0 & 0 & 0 \\
+  0 & 1 & ... & 0 & 0 & 0 \\
+  0 & 0 & ... & 1 & 0 & 0 \\
+  0 & 0 & ... & 0 & 0 & 0 \\
+  0 & 0 & ... & 0 & 0 & 0 \\
+ \end{matrix}
+\]
+infatti ho la prima parte della matrice corrispondente ai $w$, poi due righe e colonne tutte nulle corrispondenti a $b$ e a $\xi$.\\
+Il parametro $c$ mi fa da trade-off tra gli errori commessi e la giusta classificazione.\\
+
+Si definiscono Support Vector tutti gli esempi di training $x_i$ tali che $y_i(w^T x_i+b) \leqslant 1$: nel caso $y_i(w^T x_i+b) < 1$ si chiamano Bound Support Vector, cioè il termine $\xi_i$ associato a quell'esempio è maggiore di zero; se invece  $y_i(w^T x_i+b) = 1$ si chiamano Support Vector non al Bound, quindi posti esattamente sul bordo del margine.\\
+
+Questo modello di machine learning porta alla risoluzione di un problema di minimo vincolato complesso, quindi ora procediamo con l'introduzione di alcuni concetti utili alla creazione di un problema duale analogo ma più semplice che verrà utilizzato per la risoluzione.
+
 \section{Ottimizzazione Vincolata}
 
 
