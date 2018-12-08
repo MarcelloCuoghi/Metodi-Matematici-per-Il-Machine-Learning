@@ -12,6 +12,8 @@
 \renewcommand{\figurename}{Figura}
 \renewcommand{\contentsname}{Indice}
 \renewcommand{\chaptername}{Capitolo}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
  
 \begin{document}
 
@@ -328,29 +330,29 @@ eseguendo le seguenti sostituzioni $s^k =(x^{k+1} - x^{k})$ e $y^k=\nabla f(x^{k
 Procedo cercando i valori di di $\alpha$ che minimizzano la distanza tra i due termini dell'equazione $\frac{1}{\alpha}  s^k = y^k$:
 \begin{equation} 
 \label{BB4}
-\arg\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
+\argmin_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
 \end{equation}
 e per simmetria:
 \begin{equation} 
 \label{BB5}
-\arg\min_{\alpha} \| s^k -\alpha y^k\|^2 
+\argmin_{\alpha} \| s^k -\alpha y^k\|^2 
 \end{equation}
 Dall'equazione (\ref{BB4}), ricavo gli $\alpha$ minimi:
 
 \begin{equation} 
 \label{BB6}
 	\begin{split}
-	\arg\min_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
-	 &= \arg\min_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
-	 &= \arg\min_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
+	\argmin_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
+	 &= \argmin_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
+	 &= \argmin_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
 	 & posto\  \frac{1}{\alpha} = \gamma \ ,({y^k}^T y^k)\ non\ dipende\ da\ \alpha,\ lo\ elimino\\
-	 &=  \arg\max_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
+	 &=  \argmax_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
 	 &trovo\ il\ massimo\ ponendo\ la\ derivata\ a\ zero\\
 	 &\Rightarrow \gamma {s^k}^T s^k -{s^k}^T y^k = 0\\
 	 & \gamma = \frac{{s^k}^T y^k}{{s^k}^T s^k}, \ da\ cui\\
 	 & \alpha^{BB1} = \frac{{s^k}^T s^k}{{s^k}^T y^k}\\
 	 & e\ in\ modo\ analogo: \\
-	 & \arg\min_{\alpha} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
+	 & \argmin_{\alpha} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
 	 & \alpha^{BB2} = \frac{{s^k}^T y^k}{{y^k}^T y^k}
 	\end{split}
 \end{equation}
@@ -419,13 +421,13 @@ Nel caso che i due insiemi non siano linearmente separabili, si aggiunge una var
 \end{equation}
 Il problema è convesso poiché ho che l'Hessiana del mio problema è il seguente:\\
 \[
- \begin{matrix}
-  1 & 0 & ... & 0 & 0 & 0 \\
-  0 & 1 & ... & 0 & 0 & 0 \\
-  0 & 0 & ... & 1 & 0 & 0 \\
-  0 & 0 & ... & 0 & 0 & 0 \\
-  0 & 0 & ... & 0 & 0 & 0 \\
- \end{matrix}
+ \begin{bmatrix}
+  1 & 0 & \dots & 0 & 0 & 0 \\
+  0 & 1 & \dots & 0 & 0 & 0 \\
+  0 & 0 & \dots & 1 & 0 & 0 \\
+  0 & 0 & \dots & 0 & 0 & 0 \\
+  0 & 0 & \dots & 0 & 0 & 0 \\
+ \end{bmatrix}
 \]
 infatti ho la prima parte della matrice corrispondente ai $w$, poi due righe e colonne tutte nulle corrispondenti a $b$ e a $\xi$.\\
 Il parametro $c$ mi fa da trade-off tra gli errori commessi e la giusta classificazione.\\
@@ -435,8 +437,26 @@ Si definiscono Support Vector tutti gli esempi di training $x_i$ tali che $y_i(w
 Questo modello di machine learning porta alla risoluzione di un problema di minimo vincolato complesso, quindi ora procediamo con l'introduzione di alcuni concetti utili alla creazione di un problema duale analogo ma più semplice che verrà utilizzato per la risoluzione.
 
 \section{Ottimizzazione Vincolata}
+Nel seguito si considereranno problemi del tipo $\min_{\Omega \in R^n} f(x)$, dove $f:R^n \rightarrow R$ è definita su di un aperto contenete $\Omega$ ed avente derivate continue.\\
+$\Omega$ è detta regione ammissibile, non vuota e contenuta in $R^n$, chiusa e convessa.\\
+Si definiscono vincoli semplici i vincoli la cui operazione di proiezione di un vettore sulla regione ammissibile è facile, cioè avviene a basso costo. Il costo è espresso in termini di iterazioni proporzionali alla dimensione del problema, un basso costo quindi implica un numero di iterazioni lineare rispetto alla dimensione del problema. L'operazione di proiezione consiste nel trovare il punto della regione ammissibile più vicino al punto dato: dato $z \in R^n$, $P_\Omega(z)=\argmin_{x \in \Omega}\| x-z\|_2$. Un esempio tipico di vincoli semplici è dato dai vincoli di tipo box, in cui si limita dall'alto e dal basso i punti: $\Omega=\{ x \in R^n: l\leqslant x \leqslant u \}\  l,u \in R^n$.\\
 
-
+Nel nostro caso la regione ammissibile è esprimibile come $\Omega=\{x \in R^n: h_i(x)=0, i=1,\dots,m \land g_j(x) \leqslant 0, j=1,\dots,p\}$:
+\begin{equation} \label{problema_tipo_vincoli}
+	\begin{aligned}
+	& \min 
+	& & f(x)\\
+	& s.t. 
+	& & h_i(x)=0 
+	& & & i= 1,...,m\\
+	&
+	& & g_j(x) \leqslant 0
+	& & & j= 1,...,p
+	\end{aligned}
+\end{equation}
+\\
+Si dice che un vincolo $g_j(x) \leqslant 0$ è attivo in $x^*$ se $g_j(x^*) = 0$.\\
+Si definisce insieme dei vincoli attivi in $x^*$ l'insieme degli indici $j$ corrispondenti ai vincoli attivi in $x^*$: $A(x^*)=\{ j: g_j(x^*) = 0\}$.
 
 \subsection{Funzione Lagrangiana}
 
