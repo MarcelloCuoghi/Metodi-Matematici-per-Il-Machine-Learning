@@ -312,10 +312,11 @@ Stesso risultato più generale si ha con $f : R^n \rightarrow R$, $f \in \mathca
 dove $k(A) = \frac{M}{m} \Rightarrow \left(\frac{M- m}{M+m}\right)^2 = \left(\frac{\frac{M}{m}- 1 }{\frac{M}{m} + 1 }\right)^2 = \left(\frac{k(A)- 1}{k(A)+1}\right)^2 $
 
 \subsection{Barzilai-Borwein}
-\`E uno dei metodi più utilizzati per accelerare notevolmente la velocità di convergenza senza dispendio in termini di risorse di calcolo. Si cercano di inglobare informazioni del secondo ordine, quindi relative all'Hessiana, nella scelta della lunghezza del passo $\alpha_k$. In pratica si cercano valori di $\alpha_k$ tali che $\alpha_k \nabla f(x^k) \approx (\nabla^2 f(x^k))^{-1}  \nabla f(x^k)$. Supposto di voler minimizzare una funzione quadratica del tipo $\frac{1}{2} x^T A x$, dove quindi l'Hessiana è $A$, la precedente relazione ci porta ad ottenere:
+\`E uno dei metodi più utilizzati per accelerare notevolmente la velocità di convergenza senza dispendio in termini di risorse di calcolo. Si cercano di inglobare informazioni del secondo ordine, quindi relative all'Hessiana, nella scelta della direzione di discesa $d^k = -\rho_k \nabla f(x^k)$. In pratica si cercano valori di $\rho_k$ tali che $\rho_k \nabla f(x^k) \approx (\nabla^2 f(x^k))^{-1}  \nabla f(x^k)$.\\
+Supposto di voler minimizzare una funzione quadratica del tipo $\frac{1}{2} x^T A x$, dove quindi l'Hessiana è $A$, la precedente relazione ci porta ad ottenere:
 \begin{equation}
     \label{BB1}
-        \frac{1}{\alpha_k} I \approx A	
+        \frac{1}{\rho_k} I \approx A	
 \end{equation}
 per le proprietà di $A$ si ha che:
 \begin{equation}
@@ -327,37 +328,37 @@ eseguendo le seguenti sostituzioni $s^k =(x^{k+1} - x^{k})$ e $y^k=\nabla f(x^{k
     \label{BB3}
         A s^k = y^k
 \end{equation}
-Procedo cercando i valori di di $\alpha$ che minimizzano la distanza tra i due termini dell'equazione $\frac{1}{\alpha}  s^k = y^k$:
+Procedo cercando i valori di di $\rho$ che minimizzano la distanza tra i due termini dell'equazione $\frac{1}{\rho}  s^k = y^k$:
 \begin{equation} 
 \label{BB4}
-\argmin_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2 
+\argmin_{\rho} \frac{1}{2} \|\frac{1}{\rho} s^k - y^k\|^2 
 \end{equation}
 e per simmetria:
 \begin{equation} 
 \label{BB5}
-\argmin_{\alpha} \| s^k -\alpha y^k\|^2 
+\argmin_{\rho} \| s^k -\rho y^k\|^2 
 \end{equation}
-Dall'equazione (\ref{BB4}), ricavo gli $\alpha$ minimi:
+Dall'equazione (\ref{BB4}), ricavo i $\rho$ minimi:
 
 \begin{equation} 
 \label{BB6}
 	\begin{split}
-	\argmin_{\alpha} \frac{1}{2} \|\frac{1}{\alpha} s^k - y^k\|^2& =\\
-	 &= \argmin_{\alpha} \frac{1}{2}\left (\frac{1}{\alpha} s^k - y^k\right)^T\left(\frac{1}{\alpha} s^k - y^k\right)\\
-	 &= \argmin_{\alpha} \frac{1}{2} \left(\left(\frac{1}{\alpha}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\alpha}\right){s^k}^T y^k\right)\\
-	 & posto\  \frac{1}{\alpha} = \gamma \ ,({y^k}^T y^k)\ non\ dipende\ da\ \alpha,\ lo\ elimino\\
+	\argmin_{\rho} \frac{1}{2} \|\frac{1}{\rho} s^k - y^k\|^2& =\\
+	 &= \argmin_{\rho} \frac{1}{2}\left (\frac{1}{\rho} s^k - y^k\right)^T\left(\frac{1}{\rho} s^k - y^k\right)\\
+	 &= \argmin_{\rho} \frac{1}{2} \left(\left(\frac{1}{\rho}\right)^2 {s^k}^T s^k + {y^k}^T y^k-2\left(\frac{1}{\rho}\right){s^k}^T y^k\right)\\
+	 & posto\  \frac{1}{\rho} = \gamma \ ,({y^k}^T y^k)\ non\ dipende\ da\ \rho,\ lo\ elimino\\
 	 &=  \argmax_{\gamma} \frac{1}{2} \gamma^2 {s^k}^T s^k -\gamma{s^k}^T y^k\\
 	 &trovo\ il\ massimo\ ponendo\ la\ derivata\ a\ zero\\
 	 &\Rightarrow \gamma {s^k}^T s^k -{s^k}^T y^k = 0\\
 	 & \gamma = \frac{{s^k}^T y^k}{{s^k}^T s^k}, \ da\ cui\\
-	 & \alpha^{BB1} = \frac{{s^k}^T s^k}{{s^k}^T y^k}\\
+	 & \alpha_{k+1}^{BB1} = \frac{{s^k}^T s^k}{{s^k}^T y^k}\\
 	 & e\ in\ modo\ analogo: \\
-	 & \argmin_{\alpha} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
-	 & \alpha^{BB2} = \frac{{s^k}^T y^k}{{y^k}^T y^k}
+	 & \argmin_{\rho} \frac{1}{2} \|s^k - \alpha y^k\|^2 \\
+	 & \alpha_{k+1}^{BB2} = \frac{{s^k}^T y^k}{{y^k}^T y^k}
 	\end{split}
 \end{equation}
 Queste regole, prescindendo dalla conoscenza di A, possono essere inglobate a costo zero in un algoritmo per problemi non lineari (con line search inesatta) anche con vincoli semplici per cui l'Hessiana è difficilmente calcolabile.\\
-Si osserva che $\alpha^{BB2} \leqslant \alpha^{BB1}$. Spesso si utilizzano tecniche di alternanza, per cui si eseguono alcune iterazioni con il primo parametro, altre iterazioni con il secondo parametro e così via.
+Si osserva che $\rho^{BB2} \leqslant \rho^{BB1}$. Spesso si utilizzano tecniche di alternanza, per cui si eseguono alcune iterazioni con il primo parametro, altre iterazioni con il secondo parametro e così via.
 
 \chapter{Support Vector Machine}
 
